@@ -17,6 +17,11 @@ impl Account {
         }
     }
 
+    fn summary(&self) -> String {
+        //format string, implicitly return
+        format!("{} has a balance {}", self.holder, self.balance)
+    }
+
     //mutable method as argument, an i32 argument and return type
     fn deposit(&mut self, amount: i32) -> i32 {
         //increment balance with amount, then implicit return i32
@@ -49,8 +54,22 @@ impl Bank {
     fn add_account(&mut self, account: Account) {
         self.accounts.push(account);
     }
-}
 
+    fn total_balance(&self) -> i32 {
+        //iterate over acconts, then forEach |account| return balance
+        //then return the sum
+        self.accounts.iter().map(|account| account.balance).sum()
+    }
+
+    fn summary(&self) -> Vec<String> {
+        //iterate over acconts, then forEach |account| return summary
+        // then collect all into a vec of strings
+        self.accounts
+            .iter()
+            .map(|account| account.summary())
+            .collect::<Vec<String>>()
+    }
+}
 
 // ampersands & , create a 'read-oonly' reference to a value
 // fn print_account(account: &Account) {
@@ -82,7 +101,6 @@ fn main() {
     // // allowed the account value to be  changed here
     // change_account(&mut account);
 
-
     // // here we created a 'read-only' immutable refernce to the acount variable above
     // let account_ref = &account;
     // //this will work because there are now two source of account, the original and the reference
@@ -93,20 +111,22 @@ fn main() {
     // println!("{:#?}", account_ref.holder);
     //
 
-  /*   make_and_print_account(); */
+    /*   make_and_print_account(); */
     // let account_ref = make_and_print_account();
 
     // println!("{}", account_ref.balance)
     //
     let mut bank = Bank::new();
+
+    //make mutable so changes are possible
     let mut account = Account::new(1, String::from("me"));
 
- 
     account.deposit(500);
     account.withdraw(250);
 
     bank.add_account(account);
 
-    println!("{:#?}", bank)
+    println!("{:#?}", bank.summary());
 
+    println!("{}", bank.total_balance())
 }
